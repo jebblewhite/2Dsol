@@ -58,14 +58,24 @@ class System:
             print("Simulation Colour : " + str(self.body_data[i].colour))
             print("Radius (m):" + str(self.body_data[i].radius))
     
-    def calculate_acceleration(self):
-
+    def calculate_acceleration(self, i):
+        acceleration = Vector(0,0)
+        target_body = self.celestials[i]
+        for j, other_body in enumerate(self.celestials):
+            if j != i:
+                r = math.sqrt((target_body.position.x - other_body.position.x)**2 + (target_body.position.y - other_body.position.y)**2)
+                FoverM = g * other_body.mass / r**3
+                acceleration.x += FoverM * (other_body.position.x - target_body.position.x)
+                acceleration.y += FoverM * (other_body.position.y - target_body.position.y)
+        return acceleration
+            
     def calculate_velocity(self):
 
     def update_position(self):
-        
+
     def get_data(self):
-        for 
+        for i, body in enumerate(self.celestials):
+            body.acceleration = calculate_acceleration(i)
 
 
 def main():

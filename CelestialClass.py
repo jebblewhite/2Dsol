@@ -5,6 +5,7 @@ class Celestial:
         self.name = name
         self.position = position
         self.mass = mass
+        self.acceleration = 0
         self.velocity = velocity
         self.colour = colour
         self.radius = radius
