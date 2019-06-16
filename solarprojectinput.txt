@@ -1,0 +1,6 @@
+#body name;distance from sun in m;mass in kg;colour;radius in m 
+Sun;0;2e30;yellow;6.96e8
+Mercury;5.79e10;3.3e23;gray;2.44e6
+Venus;1.082e11;4.87e24;y;6.052e6
+Earth;1.496e11;5.98e28;blue;6.371e6
+Mars;2.279e11;6.4185e23;red;3.39e6 
