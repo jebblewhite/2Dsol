@@ -56,7 +56,7 @@ class System:
             print("Mass (kg): " + str(self.body_data[i].mass))
             print("Initial Velocity (m/s): " + str(self.body_data[i].velocity))
             print("Simulation Colour : " + str(self.body_data[i].colour))
-            print("Radius (m):" + str(self.body_data[i].radius))
+            print("Radius (m): " + str(self.body_data[i].radius))
     
     def calculate_acceleration(self, i):
         acceleration = Vector(0,0)
@@ -64,18 +64,32 @@ class System:
         for j, other_body in enumerate(self.celestials):
             if j != i:
                 r = math.sqrt((target_body.position.x - other_body.position.x)**2 + (target_body.position.y - other_body.position.y)**2)
-                FoverM = g * other_body.mass / r**3
+                FoverM = self.g * other_body.mass / r**3
                 acceleration.x += FoverM * (other_body.position.x - target_body.position.x)
                 acceleration.y += FoverM * (other_body.position.y - target_body.position.y)
         return acceleration
-            
-    def calculate_velocity(self):
 
+    def calculate_velocity(self):
+        for i, target_body in enumerate(celestials):
+            target_body.velocity.x += target_body.acceleration.x * self.timestep
+            target_body.velocity.y += target_body.acceleration.y * self.timestep
+    
     def update_position(self):
+        for i, target_body in enumerate(celestials):
+            target_body.position.x += target_body.velocity.x * self.timestep
+            target_body.position.y += target_body.velocity.y * self.timestep
 
     def get_data(self):
-        for i, body in enumerate(self.celestials):
-            body.acceleration = calculate_acceleration(i)
+        for t in range(0,self.t_total):
+            for i, body in enumerate(self.celestials):
+                body.position_log.append(body.position)
+                body.acceleration = calculate_acceleration(i)
+            for i, target_body in enumerate(celestials):
+                body.calculate_velocity()
+            for i, target_body in enumerate(celestials):
+                body.update_position()
+            if t%100 == 0:
+            print("Day " + str(t))
 
 
 def main():
