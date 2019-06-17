@@ -11,7 +11,7 @@ class System:
         self.celestials = []
         self.g = 6.673e-11
         self.timestep = 86400  #seconds = 1 day
-        self.t_total = 10000 #*timestep = equivalent to 10000 days
+        self.t_total = 100000 #*timestep = equivalent to 10000 days
 
     def read_file(self,file):
         filein = open(file, "r")
@@ -70,26 +70,39 @@ class System:
         return acceleration
 
     def calculate_velocity(self):
-        for i, target_body in enumerate(celestials):
+        for i, target_body in enumerate(self.celestials):
             target_body.velocity.x += target_body.acceleration.x * self.timestep
             target_body.velocity.y += target_body.acceleration.y * self.timestep
     
     def update_position(self):
-        for i, target_body in enumerate(celestials):
+        for i, target_body in enumerate(self.celestials):
             target_body.position.x += target_body.velocity.x * self.timestep
             target_body.position.y += target_body.velocity.y * self.timestep
 
     def get_data(self):
         for t in range(0,self.t_total):
             for i, body in enumerate(self.celestials):
-                body.position_log.append(body.position)
-                body.acceleration = calculate_acceleration(i)
-            for i, target_body in enumerate(celestials):
-                body.calculate_velocity()
-            for i, target_body in enumerate(celestials):
-                body.update_position()
+                body.xdata.append(body.position.x)
+                body.ydata.append(body.position.y)
+                body.acceleration = self.calculate_acceleration(i)
+            self.calculate_velocity()
+            self.update_position()
             if t%100 == 0:
-            print("Day " + str(t))
+                print("Day " + str(t))
+
+    def plot_data(self):
+        fig = plt.figure()
+        ax = plt.axes()
+        maxrange = 0
+        for i, body in enumerate(self.celestials):
+            maxdim = 1.1 * max(max(body.xdata),max(body.ydata))
+            if maxdim > maxrange:
+                maxrange = maxdim
+            ax.plot(body.xdata, body.ydata, label=body.name, linewidth=2.0, color=body.colour)
+        ax.axis('scaled')
+        ax.set_xlim([-maxrange,maxrange])
+        ax.set_ylim([-maxrange,maxrange])
+        plt.show()
 
 
 def main():
@@ -99,4 +112,5 @@ def main():
     solar.assign_celestials() 
     solar.info()
     solar.get_data()
+    solar.plot_data()
 main()

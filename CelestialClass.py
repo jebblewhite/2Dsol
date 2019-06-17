@@ -9,5 +9,6 @@ class Celestial:
         self.velocity = velocity
         self.colour = colour
         self.radius = radius
-        self.position_log = []
+        self.xdata = []
+        self.ydata = []
         celestials.append(self)
